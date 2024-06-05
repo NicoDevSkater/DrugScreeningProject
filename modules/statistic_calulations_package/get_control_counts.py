@@ -5,7 +5,6 @@ import math
 
 global key_of_data_to_access
 key_of_data_to_access = 'prepped_data'
-'key_of_recalculated'
 
 #Functions declarations
 
