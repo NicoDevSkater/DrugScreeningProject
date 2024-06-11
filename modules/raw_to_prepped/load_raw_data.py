@@ -1,12 +1,14 @@
 import pandas as pd
 import os 
-
 import sys
-sys.path.append('/Users/nbaez/Documents/DrugScreeningProject/drugScreeningProcessing/modules')
 
-from utils.utilities import strip_path
+modulse_path = os.getenv('MODULES_PATH')
 
-raw_data_path = strip_path(os.path.abspath(__file__), 4) + '/drug_screening_raw_data/'
+sys.path.append(modulse_path)
+
+from utils.utilities import get_needed_path
+
+raw_data_path = get_needed_path(__file__ , '/DrugScreeningProject', '/drug_screening_raw_data/')
 
 #Get list of files in target directory
 files = os.listdir(raw_data_path)

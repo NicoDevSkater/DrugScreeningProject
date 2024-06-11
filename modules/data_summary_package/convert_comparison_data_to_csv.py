@@ -12,7 +12,7 @@ def main(data):
 
         comparison_data = associated_data[key_of_data_to_access]
         # comparison_data.set_index('Molecule Name', inplace=True)
-        path = '/Users/nbaez/Documents/DrugScreeningProject/drug_screening_NPI_per_compound/{}_statsv.csv'.format(key)
+        path = '/Users/nbaez/Documents/DrugScreeningProject/drug_screening_NPI_per_compound/{}_stats.csv'.format(key)
 
         comparison_data.to_csv(path)
 
