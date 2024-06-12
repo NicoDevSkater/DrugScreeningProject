@@ -1,14 +1,15 @@
+import os 
+def strip_path(path : str, directory_name : str) -> str:
 
-
-def strip_path(path, n) -> str:
-
-    arr = path.split('/')
+    stripped_file_name = strip_after_substring(path, directory_name)
     
-    #remove last element which is the fila name
-    for _ in range(n):    
-        
-        arr.pop()
+    return stripped_file_name + directory_name
 
-    to_string = '/'.join(arr)
+def get_needed_path(file_path , destination_directory : str , path_to_append : str) -> str:
 
-    return to_string
+    return strip_path(file_path, destination_directory) + path_to_append
+
+
+def strip_after_substring(str : str, substring : str) -> str:
+    
+    return str.split(substring)[0]
