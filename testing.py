@@ -1,22 +1,46 @@
 import pandas as pd
+import os
 
-mpox_data = pd.read_csv('drug_screening_NPI_per_compound/Tuschl_Mpox_E1_E12_MTase_PrimaryScreen_stats.csv', index_col = 0)
-zika_data = pd.read_csv('drug_screening_NPI_per_compound/Tuschl_ZIKA_NS5_MTase_PrimaryScreen_stats.csv', index_col=0)
 
-def combine_columns(df: pd.DataFrame, column_1: str, column_2: str) -> pd.DataFrame:
+npi_per_compound_path = os.getenv('NPI_DATA_PATH')
+all_data_path = os.getenv('MERGED_ASSAY_PATH')
 
-    df[column_1 + "_and_" + column_2] = df[column_1].astype(str) +'_'+ df[column_2].astype(str)
 
-    return df
+npi_file_names = os.listdir(npi_per_compound_path)[1:]
+all_data_file_name = os.listdir(all_data_path)[1:][0]
 
-mpox_combined = combine_columns(mpox_data, 'Plate','Well')
-zika_combined = combine_columns(zika_data, 'Plate','Well')
+# def main1(files_names, path):
 
-mpox_combined.set_index('Plate_and_Well', inplace=True)
-zika_combined.set_index('Plate_and_Well', inplace=True)
+#     dataframes = list(map(lambda x: pd.read_csv(path+x, index_col=0), files_names))
 
-merged = pd.concat([zika_combined,mpox_combined], axis=1, join='outer')
+#     molecule_name_cols = list(map(lambda y: y['Molecule Name'], dataframes))
 
-# merged_changed = merged_data.set_index('Plate_and_Well')
+#     all_together = pd.concat(molecule_name_cols)
 
-x = 6
+
+
+#     f =7
+
+# main1(npi_file_names, npi_per_compound_path)
+
+def main2(file_name, path):
+
+    #Read merged data of all 7 assays into memory
+    dataframe = pd.read_parquet(path+file_name)
+
+    #Extract all molecule name (RU identifier) columns from each assay
+    cols_to_process = [col for col in dataframe.columns if col.split(';')[1] == 'Molecule Name']
+    to_series = list(map(lambda col: dataframe[col],cols_to_process))
+
+    #Concatenate all molecule name columns from all 7 assays together
+    all_together = pd.concat(to_series)
+
+    #Convert list into a set
+    #Converting a list into a set removes all duplicate value Ex.[1,2,3,3,3,4] -> [1,2,3,4]
+    duplicates_removed = set(all_together)
+
+    #Print the length of the set
+    print('unique compounds, all assays',len(duplicates_removed))
+
+
+main2(all_data_file_name, all_data_path)
