@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 
 global key_of_npi_stats, key_of_outlier_status, key_of_stats_per_plate, key_of_previous_conditions
 key_of_npi_stats = 'npi_stats'
@@ -91,7 +92,17 @@ def main(data):
 
         processed_data = operate(npi_data, outlier_data_needed, stats_needed, prev_stats_needed)
 
+        #UPLOAD NPI PER COMPOUND AS CSV
+
+        #subset to compounds only
+        compounds_only = processed_data[processed_data['Control State'] == 'compound']
+
+        #get directory to upload data
+        path = os.getenv("NPI_PER_COM")
+
+        compounds_rst_indx = compounds_only.reset_index()
+
+        compounds_only.to_csv(path + 'npi-per-compound-' + key + '.csv')
+
         associated_data['summary_table'] = processed_data
-
-
     return data

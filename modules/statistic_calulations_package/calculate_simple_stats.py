@@ -10,8 +10,28 @@ def operate(df):
 
     stats_calculated = grouped.agg({'activity_level' : ['sum','mean','std','size']})
 
-    print(stats_calculated)
+    stats_pvt_tbl = pd.pivot_table(stats_calculated, index='Plate_and_Date', columns = 'Control State')
 
+    stats_pvt_tbl.columns = [format_columns(col) for col in stats_pvt_tbl.columns]
+
+    stats_pvt_tbl['total_wells'] = stats_pvt_tbl["total_pos"] + stats_pvt_tbl["total_neg"] + stats_pvt_tbl["total_com"] + stats_pvt_tbl["total_uns"]
+
+    return stats_pvt_tbl
+def format_columns(column : tuple[str,str,str]) -> str:
+
+    activity_level , agg_method, control_state = column
+
+    suffix = control_state[:3]
+
+    if agg_method == 'size':
+
+        return "_".join(['total',suffix])
+    
+    elif agg_method == 'std':
+
+        agg_method = 'stdev'
+
+    return '_'.join([agg_method , activity_level, suffix])
 
 def main(data):
     
@@ -23,6 +43,6 @@ def main(data):
 
         processed_data =  operate(dataframe)
 
-        associated_data['control_state_counts'] = processed_data
+        associated_data['control_state_stats'] = processed_data
 
     return data

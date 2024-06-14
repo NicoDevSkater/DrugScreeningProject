@@ -4,7 +4,7 @@ import os
 import sys 
 all_assay_data_dir_path = os.getenv('MERGED_ASSAY_PATH')
 
-all_assay_data_file_path = os.listdir(all_assay_data_dir_path)[1]
+# all_assay_data_file_path = os.listdir(all_assay_data_dir_path)[1]
 
 
 class Apply_Parameters :
@@ -46,9 +46,9 @@ class Apply_Parameters :
 
 
 
-def main(data_dir_path, data_file_path):
+def main(data_dir_path, data_file_path = 'compound_stats_all_assays.parquet'):
 
-    data_read = pd.read_parquet(data_dir_path + data_file_path, engine='pyarrow')
+    data_read = pd.read_parquet(data_dir_path + data_file_path)
 
     data_read.columns = pd.MultiIndex.from_tuples([tuple(col.split(';')) for col in data_read.columns])
 
@@ -58,8 +58,6 @@ def main(data_dir_path, data_file_path):
 
     dir_to_save_at = os.getenv('NOISE_FILTERED_PATH')
 
-    data_subset.to_csv(dir_to_save_at + 'all_assay_data_noise_filtered.csv')
+    data_subset.to_csv(dir_to_save_at + 'all_assay_data_noise_filtered.csv', index = False)
 
-    y =7 
-
-main(all_assay_data_dir_path, all_assay_data_file_path)
+main(all_assay_data_dir_path)

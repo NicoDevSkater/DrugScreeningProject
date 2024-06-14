@@ -7,10 +7,10 @@ sys.path.append(modulse_path)
 
 from utils.utilities import get_needed_path, strip_after_substring
 
-npi_data_path = get_needed_path(__file__ , '/DrugScreeningProject', '/drug_screening_NPI_per_compound/')
+with_prepped_path = get_needed_path(__file__ , '/DrugScreeningProject', '/drug_screening_data_merged_with_prepped/')
 
 #Get list of files in target directory
-files = os.listdir(npi_data_path)
+files = os.listdir(with_prepped_path)
 #filter to files that are comma seperated
 csv_file_names = [file for file in files if file.endswith('.csv')]
 
@@ -28,7 +28,7 @@ def combine_columns(df: pd.DataFrame, column_1: str, column_2: str) -> pd.DataFr
 
     return df
 
-def main(file_names = csv_file_names , path = npi_data_path) :
+def main(file_names = csv_file_names , path = with_prepped_path) :
 
     data_dict = {}
 
@@ -38,15 +38,8 @@ def main(file_names = csv_file_names , path = npi_data_path) :
 
         rename_func = lambda col: col.replace(' ', '_')
 
-        columns_to_combine = ['Plate','Well']
+        data_formatted = format_columns(associated_data, rename_func)
 
-        data_formatted = (
-            associated_data
-            .pipe(format_columns, rename_func)
-            .pipe(combine_columns, columns_to_combine[0], columns_to_combine[1])
-            .pipe(pd.DataFrame.drop,columns = ['Plate','Well'] )
-        )
-        
         remove_heading = 'Tuschl_'
 
         key = strip_after_substring(file_name.replace(remove_heading, ''),'_PrimaryScreen')
