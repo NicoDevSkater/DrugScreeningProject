@@ -100,7 +100,7 @@ def main(data):
         #get directory to upload data
         path = os.getenv("NPI_PER_COM")
 
-        compounds_rst_indx = compounds_only.reset_index()
+        # compounds_rst_indx = compounds_only.reset_index()
 
         compounds_only.to_csv(path + 'npi-per-compound-' + key + '.csv')
 

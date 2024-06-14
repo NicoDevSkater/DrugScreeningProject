@@ -13,7 +13,7 @@ raw_data_path = get_needed_path(__file__ , '/DrugScreeningProject', '/drug_scree
 #Get list of files in target directory
 files = os.listdir(raw_data_path)
 #filter to files that are comma seperated
-csv_file_names = [file for file in files if file.endswith('.csv')]
+csv_file_names = [file for file in files if file == 'CDD CSV Export_Tuschl_Mpox_E1_E12_MTase_PrimaryScreen.csv']
 
 def main(raw_data_file_names, path):
 
