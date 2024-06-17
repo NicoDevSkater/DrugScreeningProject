@@ -15,14 +15,20 @@ def main(file_names = pilot_file_names, path = pilot_screens_path):
     for name in file_names:
 
         associated_data = pd.read_csv(path + name)
-        remove_leading = "CDD_CSV_Export_Tuschl_"
-        remove_after = "_Pilot"
+        remove_leading = "CDD CSV Export_Tuschl_"
+        remove_after = "_Pilot_"
 
         leading_removed = name.replace(remove_leading ,'')
 
-        key = leading_removed.split(remove_after)[0]
+        protein, after_substring = leading_removed.split(remove_after)
 
-        data_dict[key] = associated_data
+        day_sequence = after_substring.split('.')[0]
+
+        if not protein in data_dict:
+
+            data_dict[protein] = {}
+
+        data_dict[protein][day_sequence] = associated_data
 
     return data_dict
 

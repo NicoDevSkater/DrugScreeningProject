@@ -29,8 +29,8 @@ class Apply_Parameters :
 
         for assay_label in self.assay_labels:
 
-            compound_npi_in_assay = row[(assay_label, 'NPI')]
-            compound_z_score_npi_in_assay = row[(assay_label, 'Z Score NPI')]
+            compound_npi_in_assay = float(row[(assay_label, 'NPI')])
+            compound_z_score_npi_in_assay = float(row[(assay_label, 'Z Score NPI')])
 
             if pd.isna(compound_npi_in_assay):
 
@@ -46,11 +46,24 @@ class Apply_Parameters :
 
 
 
-def main(data_dir_path, data_file_path = 'compound_stats_all_assays.parquet'):
+def main(data_dir_path, data_file_path = 'mpox-mmu_cgas-merged.csv'):
 
-    data_read = pd.read_parquet(data_dir_path + data_file_path)
+    # data_read = pd.read_parquet(data_dir_path + data_file_path)
 
-    data_read.columns = pd.MultiIndex.from_tuples([tuple(col.split(';')) for col in data_read.columns])
+    data_read = pd.read_csv(data_dir_path + data_file_path, low_memory=False)
+
+    # data_read.columns = pd.MultiIndex.from_tuples([tuple(col.split(';')) for col in data_read.columns])
+
+    first_row = data_read.iloc[0]
+
+    #Create a multi-index from the column names and the first row
+    multi_index = pd.MultiIndex.from_tuples([(col.split('.')[0], first_row[col]) for col in data_read.columns])
+
+    #Assign the new multi-index to the columns of the DataFrame
+    data_read.columns = multi_index
+
+    # Step 5: Drop the first row as it is now part of the multi-index
+    data_read = data_read.drop(data_read.index[0])
 
     parameters = Apply_Parameters(data_read)
 

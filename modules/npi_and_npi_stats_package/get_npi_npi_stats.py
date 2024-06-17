@@ -34,6 +34,9 @@ class NPI_Controller:
         a_std = neg_std
         b_std = math.sqrt(( a_std ** 2 ) + ( pos_std ** 2 ))
 
+        if a == 0 or b == 0:
+            return pd.NA
+
         delta_npi = npi * math.sqrt( (( a_std / a ) ** 2 ) + (( b_std / b ) ** 2 ) )
         return delta_npi
     

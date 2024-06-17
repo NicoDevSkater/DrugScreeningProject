@@ -8,12 +8,12 @@ sys.path.append(modulse_path)
 
 from utils.utilities import get_needed_path
 
-raw_data_path = get_needed_path(__file__ , '/DrugScreeningProject', '/drug_screening_raw_data/')
+raw_data_path = get_needed_path(__file__ , '/DrugScreeningProject', '/drug-screening-raw-data/')
 
 #Get list of files in target directory
 files = os.listdir(raw_data_path)
 #filter to files that are comma seperated
-csv_file_names = [file for file in files if file == 'CDD CSV Export_Tuschl_Mpox_E1_E12_MTase_PrimaryScreen.csv']
+csv_file_names = [file for file in files if file.endswith('.csv')]
 
 def main(raw_data_file_names, path):
 
@@ -22,11 +22,10 @@ def main(raw_data_file_names, path):
     for file_name in raw_data_file_names: 
 
         associated_data = pd.read_csv(path + file_name, low_memory=False)
-        
-        remove_heading = 'CDD CSV Export_'
+
         remove_ending = '.csv' 
 
-        key = file_name.replace(remove_heading, '').replace(remove_ending, '')
+        key = file_name.replace(remove_ending, '')
 
         data_dict[key] = {'prepped_data':associated_data,
                           'meta_data':{}}
